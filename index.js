@@ -10,28 +10,35 @@ var fs = require("fs");
 var path = require("path");
 var typescript = require("typescript");
 
-function loadRelativeConfig(){
-	var configPath = locateConfigFile("tsconfig.json", path.dirname(this.resourcePath));
-	if(typeof configPath !== "string") {
-		// no tslint.json found
-		console.log('tslint.json not found');
-		return {};
+
+function loadRelativeConfig() {
+	var options = {
+		 formatter: "custom",
+		 formattersDirectory: 'node_modules/tslint-loader/formatters/',	  
+		 configuration: {}
+	};
+	
+	var configPath = locateConfigFile("tslint.json", path.dirname(this.resourcePath));
+	if(typeof configPath !== "string") {		
+		console.log('tslint.json not found');		
 	} else {
 		this.addDependency(configPath);
-		var file = fs.readFileSync(path, "utf8");
-		return JSON.parse(stripJsonComments(file));
+		var file = fs.readFileSync(configPath, "utf8");
+		options.configuration = JSON.parse(stripJsonComments(file));
 	}
+	
+	return options;
 }
 
-function locateConfigFile(filename, startingPath){
+function locateConfigFile(filename, startingPath) {
 	var filePath = path.join(startingPath, filename);
-	if(typescript.sys.fileExists(filePath)){
+	if(typescript.sys.fileExists(filePath)){		
 		return filePath;
 	}
 	var parentPath = path.dirname(startingPath);
 	if(parentPath === startingPath)
 		return undefined;
-	locateConfigFile(filename,parentPath);
+	return locateConfigFile(filename,parentPath);
 }
 
 function lint(input, config) {
@@ -49,10 +56,14 @@ function lint(input, config) {
 		config[name] = query[name];
 	}
 	
-	var source = input.split(/\r\n?|\n/g);
-	var linter = new Linter(this.resourcePath, source, config);
+	var linter = new Linter(this.resourcePath, input, config);
 	var result = linter.lint();	
-	this.emitWarning('tslint: ' + result);
+	report(this.resourcePath, result, this.emitWarning);
+}
+
+function report(filename, result, emitter) {
+	if(result.failureCount === 0) return;		
+	emitter(result.output);	
 }
 
 
@@ -60,7 +71,6 @@ module.exports = function(input, map) {
 	this.cacheable && this.cacheable();
 	var callback = this.async();
 
-	// load tslint.json synchronously
 	var config = loadRelativeConfig.call(this);
 	lint.call(this, input, config);	
 	callback(null, input, map);
