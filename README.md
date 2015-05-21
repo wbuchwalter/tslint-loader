@@ -20,3 +20,10 @@ module.exports = {
 ## License
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
+
+## Installation
+
+``` shell
+npm install tslint-loader --save-dev
+```
+
