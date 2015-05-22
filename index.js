@@ -41,30 +41,54 @@ function locateConfigFile(filename, startingPath) {
 	return locateConfigFile(filename,parentPath);
 }
 
-function lint(input, config) {
-	
+function lint(input, options) {	
 	//Override options in tslint.json by those passed to the compiler
-	if(this.options.tslint) {
-		for(var name in this.options.tslint) {
-			config[name] = this.options.tslint[name];
-		}
+	if(this.options.tslint) {    
+    merge(options.configuration, this.options.tslint);		
 	}
 
 	//Override options in tslint.json by those passed to the loader as a query string
 	var query = loaderUtils.parseQuery(this.query);
-	for(var name in query) {
-		config[name] = query[name];
-	}
+	merge(options.configuration, query);	 
 	
-	var linter = new Linter(this.resourcePath, input, config);
-	var result = linter.lint();	
-	report(this.resourcePath, result, this.emitWarning);
+	var linter = new Linter(this.resourcePath, input, options);
+	var result = linter.lint();
+  var emitter = options.configuration.emitErrors ? this.emitError : this.emitWarning;	
+	report(result, emitter, options.configuration.failOnHint);
 }
 
-function report(filename, result, emitter) {
+function report(result, emitter, failOnHint) {
 	if(result.failureCount === 0) return;		
 	emitter(result.output);	
+  if(failOnHint) {   
+    throw new Error("Compilation failed due to tslint errors.");
+  }
 }
+
+/* Merges two (or more) objects,
+   giving the last one precedence */
+function merge(target, source) {   
+  if ( typeof target !== 'object' ) {
+    target = {};
+  }
+  
+  for (var property in source) {        
+    if ( source.hasOwnProperty(property) ) {            
+      var sourceProperty = source[ property ];            
+      if ( typeof sourceProperty === 'object' ) {
+        target[ property ] = merge( target[ property ], sourceProperty );
+        continue;
+      }            
+      target[ property ] = sourceProperty;            
+    }        
+  }
+  
+  for (var a = 2, l = arguments.length; a < l; a++) {
+    merge(target, arguments[a]);
+  }
+  
+  return target;
+};
 
 
 module.exports = function(input, map) {
