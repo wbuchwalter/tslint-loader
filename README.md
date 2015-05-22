@@ -19,8 +19,8 @@ module.exports = {
 		// any tslint option https://www.npmjs.com/package/tslint#supported-rules
 		// i. e.
 		rules: {
-      quotemark: [true, "double"]
-    },
+      		quotemark: [true, "double"]
+        },
 
 		// tslint errors are displayed by default as warnings
 		// set emitErrors to true to display them as errors
