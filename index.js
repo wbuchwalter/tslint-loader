@@ -44,7 +44,15 @@ function locateConfigFile(filename, startingPath) {
 function lint(input, options) {	
 	//Override options in tslint.json by those passed to the compiler
 	if(this.options.tslint) {    
-    merge(options.configuration, this.options.tslint);		
+    	merge(options.configuration, this.options.tslint);
+    	
+    	if(this.options.tslint.formatter) {
+			options.formatter = this.options.tslint.formatter;
+		}
+
+		if(this.options.tslint.formattersDirectory) {
+			options.formattersDirectory = this.options.tslint.formattersDirectory;
+		}
 	}
 
 	//Override options in tslint.json by those passed to the loader as a query string
