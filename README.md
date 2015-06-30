@@ -18,8 +18,10 @@ module.exports = {
 	tslint: {
 		// any tslint option https://www.npmjs.com/package/tslint#supported-rules
 		// i. e.
-		rules: {
-      		quotemark: [true, "double"]
+		configuration: {
+            rules: {
+                quotemark: [true, "double"]
+            }
         },
 
 		// tslint errors are displayed by default as warnings

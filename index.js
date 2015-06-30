@@ -44,25 +44,17 @@ function locateConfigFile(filename, startingPath) {
 function lint(input, options) {	
 	//Override options in tslint.json by those passed to the compiler
 	if(this.options.tslint) {    
-    	merge(options.configuration, this.options.tslint);
-    	
-    	if(this.options.tslint.formatter) {
-			options.formatter = this.options.tslint.formatter;
-		}
-
-		if(this.options.tslint.formattersDirectory) {
-			options.formattersDirectory = this.options.tslint.formattersDirectory;
-		}
+    	merge(options, this.options.tslint);
 	}
 
 	//Override options in tslint.json by those passed to the loader as a query string
 	var query = loaderUtils.parseQuery(this.query);
-	merge(options.configuration, query);	 
+	merge(options, query);	 
 	
 	var linter = new Linter(this.resourcePath, input, options);
 	var result = linter.lint();
-  var emitter = options.configuration.emitErrors ? this.emitError : this.emitWarning;	
-	report(result, emitter, options.configuration.failOnHint);
+  var emitter = options.emitErrors ? this.emitError : this.emitWarning;	
+	report(result, emitter, options.failOnHint);
 }
 
 function report(result, emitter, failOnHint) {
