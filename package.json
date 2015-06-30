@@ -1,6 +1,6 @@
 {
   "name": "tslint-loader",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "tslint loader for webpack",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "dependencies": {  
     "loader-utils": "^0.2.7",
     "strip-json-comments": "^1.0.2",
-    "tslint": "^2.2.0-beta",
+    "tslint": "^2.3.0-beta",
     "typescript": "^1.5.0-beta"
   }
 }
