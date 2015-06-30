@@ -18,8 +18,10 @@ module.exports = {
 	tslint: {
 		// any tslint option https://www.npmjs.com/package/tslint#supported-rules
 		// i. e.
-		rules: {
-      		quotemark: [true, "double"]
+		configuration: {
+            rules: {
+                quotemark: [true, "double"]
+            }
         },
 
 		// tslint errors are displayed by default as warnings
@@ -30,6 +32,12 @@ module.exports = {
 		// if you want any file with jshint errors to fail
 		// set failOnHint to true
 		failOnHint: true,		
+
+		// name of your formatter (optional)
+		formatter: "yourformatter",
+
+		// path to directory contating formatter (optional)
+		formattersDirectory: "node_modules/tslint-loader/formatters/"
 	}
 }
 ```
