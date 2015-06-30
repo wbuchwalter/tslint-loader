@@ -16,8 +16,6 @@ module.exports = {
 	},
   // more options in the optional tslint object
 	tslint: {
-		// any tslint option https://www.npmjs.com/package/tslint#supported-rules
-		// i. e.
 		configuration: {
             rules: {
                 quotemark: [true, "double"]
@@ -29,7 +27,7 @@ module.exports = {
 		emitErrors: false,
 
 		// tslint does not interrupt the compilation by default
-		// if you want any file with jshint errors to fail
+		// if you want any file with tslint errors to fail
 		// set failOnHint to true
 		failOnHint: true,		
 
