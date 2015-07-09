@@ -1,6 +1,6 @@
 {
   "name": "tslint-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "tslint loader for webpack",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "url": "https://github.com/wbuchwalter/tslint-loader/issues"
   },
   "homepage": "https://github.com/wbuchwalter/tslint-loader",
-  "dependencies": {  
+  "dependencies": {
     "loader-utils": "^0.2.7",
     "strip-json-comments": "^1.0.2",
     "tslint": "^2.3.1-beta",
