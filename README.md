@@ -34,7 +34,7 @@ module.exports = {
 		// name of your formatter (optional)
 		formatter: "yourformatter",
 
-		// path to directory contating formatter (optional)
+		// path to directory containing formatter (optional)
 		formattersDirectory: "node_modules/tslint-loader/formatters/"
 	}
 }
