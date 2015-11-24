@@ -81,7 +81,6 @@ function writeToFile(fileOutputOpts, result) {
 
   if(result.failures.length) {
     mkdirp.sync(fileOutputOpts.dir);
-    console.log(result);
 
     var relativePath = path.relative("./", result.failures[0].fileName);
 
@@ -91,7 +90,6 @@ function writeToFile(fileOutputOpts, result) {
     var extension = fileOutputOpts.ext || "txt";
 
     var targetFilePath = path.join(fileOutputOpts.dir, relativePath + "." + extension);
-    console.log(targetFilePath);
 
     var contents = result.output;
 
