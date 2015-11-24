@@ -19,9 +19,7 @@ function loadRelativeConfig() {
   };
   
   var configPath = locateConfigFile("tslint.json", path.dirname(this.resourcePath));
-  if(typeof configPath !== "string") {
-    console.log('tslint.json not found');
-  } else {
+  if(typeof configPath == "string") {
     this.addDependency(configPath);
     var file = fs.readFileSync(configPath, "utf8");
     options.configuration = JSON.parse(stripJsonComments(file));
