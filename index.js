@@ -9,6 +9,8 @@ var loaderUtils = require("loader-utils");
 var fs = require("fs");
 var path = require("path");
 var typescript = require("typescript");
+var mkdirp = require("mkdirp");
+var rimraf = require("rimraf");
 
 
 function loadRelativeConfig() {
@@ -39,7 +41,7 @@ function locateConfigFile(filename, startingPath) {
   return locateConfigFile(filename,parentPath);
 }
 
-function lint(input, options) {  
+function lint(input, options) {
   //Override options in tslint.json by those passed to the compiler
   if(this.options.tslint) {    
     merge(options, this.options.tslint);
@@ -52,14 +54,54 @@ function lint(input, options) {
   var linter = new Linter(this.resourcePath, input, options);
   var result = linter.lint();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
-  report(result, emitter, options.failOnHint);
+
+  report(result, emitter, options.failOnHint, options.fileOutput);
 }
 
-function report(result, emitter, failOnHint) {
+function report(result, emitter, failOnHint, fileOutputOpts) {
   if(result.failureCount === 0) return;    
   emitter(result.output);
+
+  if(fileOutputOpts && fileOutputOpts.dir) {
+    writeToFile(fileOutputOpts, result);
+  }
+
   if(failOnHint) {   
     throw new Error("Compilation failed due to tslint errors.");
+  }
+}
+
+var cleaned = false;
+
+function writeToFile(fileOutputOpts, result) {
+  if(fileOutputOpts.clean === true && cleaned === false) {
+    rimraf.sync(fileOutputOpts.dir);
+    cleaned = true;
+  }
+
+  if(result.failures.length) {
+    mkdirp.sync(fileOutputOpts.dir);
+
+    var relativePath = path.relative("./", result.failures[0].fileName);
+
+    var targetPath = path.join(fileOutputOpts.dir, path.dirname(relativePath));
+    mkdirp.sync(targetPath);
+
+    var extension = fileOutputOpts.ext || "txt";
+
+    var targetFilePath = path.join(fileOutputOpts.dir, relativePath + "." + extension);
+
+    var contents = result.output;
+
+    if(fileOutputOpts.header) {
+      contents = fileOutputOpts.header + contents;
+    }
+
+    if(fileOutputOpts.footer) {
+      contents = contents + fileOutputOpts.footer;
+    }
+
+    fs.writeFileSync(targetFilePath, contents);
   }
 }
 
@@ -70,7 +112,7 @@ function merge(target, source) {
     target = {};
   }
   
-  for (var property in source) {        
+  for (var property in source) {
     if ( source.hasOwnProperty(property) ) {            
       var sourceProperty = source[ property ];            
       if ( typeof sourceProperty === 'object' ) {
