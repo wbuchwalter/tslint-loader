@@ -35,7 +35,7 @@ module.exports = {
         formatter: "yourformatter",
 
         // path to directory containing formatter (optional)
-        formattersDirectory: "node_modules/tslint-loader/formatters/"
+        formattersDirectory: "node_modules/tslint-loader/formatters/",
         
         // These options are useful if you want to save output to files
         // for your continuous integration server
@@ -51,7 +51,7 @@ module.exports = {
 
             // A string to include at the top of every report file.
             // Useful for some report formats.
-            header: "<?xml version="1.0" encoding="utf-8"?>\n<checkstyle version="5.7">",
+            header: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<checkstyle version=\"5.7\">",
 
             // A string to include at the bottom of every report file.
             // Useful for some report formats.
