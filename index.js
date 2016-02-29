@@ -4,6 +4,7 @@
   based on jshint-loader by Tobias Koppers
 */
 var Linter = require("tslint");
+var tslintConfig = require("tslint/configuration");
 var stripJsonComments = require("strip-json-comments");
 var loaderUtils = require("loader-utils");
 var fs = require("fs");
@@ -24,7 +25,12 @@ function loadRelativeConfig() {
   if(typeof configPath == "string") {
     this.addDependency(configPath);
     var file = fs.readFileSync(configPath, "utf8");
-    options.configuration = JSON.parse(stripJsonComments(file));
+    var config = JSON.parse(stripJsonComments(file));
+    options.configuration = config;
+    if(config.rulesDirectory) {
+      var resolvedDirectories = tslintConfig.getRulesDirectories(config.rulesDirectory, path.dirname(configPath));
+      options.rulesDirectory = resolvedDirectories;
+    }
   }
   
   return options;
