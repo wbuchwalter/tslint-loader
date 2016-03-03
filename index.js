@@ -4,7 +4,7 @@
   based on jshint-loader by Tobias Koppers
 */
 var Linter = require("tslint");
-var tslintConfig = require("tslint/configuration");
+var tslintConfig = require("tslint/lib/configuration");
 var stripJsonComments = require("strip-json-comments");
 var loaderUtils = require("loader-utils");
 var fs = require("fs");
