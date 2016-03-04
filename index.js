@@ -53,6 +53,8 @@ function lint(input, options) {
     merge(options, this.options.tslint);
   }
 
+  var bailEnabled = (this.options.bail === true);
+
   //Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
   merge(options, query);   
@@ -61,10 +63,10 @@ function lint(input, options) {
   var result = linter.lint();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
 
-  report(result, emitter, options.failOnHint, options.fileOutput);
+  report(result, emitter, options.failOnHint, options.fileOutput, this.resourcePath,  bailEnabled);
 }
 
-function report(result, emitter, failOnHint, fileOutputOpts) {
+function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
   if(result.failureCount === 0) return;    
   emitter(result.output);
 
@@ -72,8 +74,12 @@ function report(result, emitter, failOnHint, fileOutputOpts) {
     writeToFile(fileOutputOpts, result);
   }
 
-  if(failOnHint) {   
-    throw new Error("Compilation failed due to tslint errors.");
+  if(failOnHint) {
+    var messages = "";
+    if (bailEnabled){
+      messages = "\n\n" + filename + "\n" + result.output;
+    }
+    throw new Error("Compilation failed due to tslint errors." +  messages);
   }
 }
 
