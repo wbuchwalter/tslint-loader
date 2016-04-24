@@ -51,14 +51,14 @@ function locateConfigFile(filename, startingPath) {
 function lint(input, options) {
   //Override options in tslint.json by those passed to the compiler
   if(this.options.tslint) {    
-    merge(options, this.options.tslint);
+    objectAssign(options, this.options.tslint);
   }
 
   var bailEnabled = (this.options.bail === true);
 
   //Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
-  merge(options, query);   
+  objectAssign(options, query);   
   
   var linter = new Linter(this.resourcePath, input, options);
   var result = linter.lint();
@@ -117,14 +117,6 @@ function writeToFile(fileOutputOpts, result) {
     fs.writeFileSync(targetFilePath, contents);
   }
 }
-
-/* Merges two (or more) objects,
-   giving the last one precedence */
-function merge(target, source) {   
-  objectAssign(target, source);
-  return target;
-}
-
 
 module.exports = function(input, map) {
   this.cacheable && this.cacheable();
