@@ -18,7 +18,7 @@ var objectAssign = require("object-assign");
 function loadRelativeConfig() {
   var options = {
      formatter: "custom",
-     formattersDirectory: 'node_modules/tslint-loader/formatters/',    
+     formattersDirectory: __dirname + '/formatters/',
      configuration: {}
   };
   
