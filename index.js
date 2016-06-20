@@ -19,33 +19,10 @@ function loadRelativeConfig() {
   var options = {
      formatter: "custom",
      formattersDirectory: __dirname + '/formatters/',
-     configuration: {}
+     configuration: tslintConfig.findConfiguration(null, this.resourcePath)
   };
-  
-  var configPath = locateConfigFile("tslint.json", path.dirname(this.resourcePath));
-  if(typeof configPath == "string") {
-    this.addDependency(configPath);
-    var file = fs.readFileSync(configPath, "utf8");
-    var config = JSON.parse(stripJsonComments(file));
-    options.configuration = config;
-    if(config.rulesDirectory) {
-      var resolvedDirectories = tslintConfig.getRulesDirectories(config.rulesDirectory, path.dirname(configPath));
-      options.rulesDirectory = resolvedDirectories;
-    }
-  }
-  
-  return options;
-}
 
-function locateConfigFile(filename, startingPath) {
-  var filePath = path.join(startingPath, filename);
-  if(typescript.sys.fileExists(filePath)){    
-    return filePath;
-  }
-  var parentPath = path.dirname(startingPath);
-  if(parentPath === startingPath)
-    return undefined;
-  return locateConfigFile(filename,parentPath);
+  return options;
 }
 
 function lint(input, options) {
