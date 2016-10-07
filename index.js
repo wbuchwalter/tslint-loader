@@ -37,7 +37,7 @@ function lint(input, options) {
   var query = loaderUtils.parseQuery(this.query);
   objectAssign(options, query);   
   
-  var linter = new Linter(this.resourcePath, input, options);
+  var linter = new Linter(this.resourcePath, fs.readFileSync(this.resourcePath, "utf8"), options);
   var result = linter.lint();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
 
