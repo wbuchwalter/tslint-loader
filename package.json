@@ -1,5 +1,5 @@
 {
-  "name": "@salecycle/tslint-loader",
+  "name": "tslint-loader",
   "version": "2.1.5",
   "description": "tslint loader for webpack",
   "main": "index.js",
