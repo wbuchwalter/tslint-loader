@@ -13,6 +13,7 @@ var typescript = require("typescript");
 var mkdirp = require("mkdirp");
 var rimraf = require("rimraf");
 var objectAssign = require("object-assign");
+var minimatch = require("minimatch");
 
 
 function loadRelativeConfig() {
@@ -27,8 +28,19 @@ function loadRelativeConfig() {
 
 function lint(input, options) {
   //Override options in tslint.json by those passed to the compiler
-  if(this.options.tslint) {    
+  if(this.options.tslint) {
     objectAssign(options, this.options.tslint);
+  }
+
+  if (!!options.ignore) {
+    var resourcePath = this.resourcePath;
+    var shouldIgnore = !!options.ignore.find(function (pattern) {
+      return minimatch(resourcePath, pattern);
+    });
+
+    if (shouldIgnore) {
+      return;
+    }
   }
 
   var bailEnabled = (this.options.bail === true);
@@ -40,7 +52,7 @@ function lint(input, options) {
   var program;
 
   if (options.typeCheck) {
-    program = Linter.createProgram(tslintConfig.findConfigurationPath(null, this.resourcePath));
+    program = options.program || Linter.createProgram(tslintConfig.findConfigurationPath(null, this.resourcePath));
   }
 
   var linter = new Linter(this.resourcePath, input, options, program);

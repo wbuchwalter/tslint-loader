@@ -1,5 +1,5 @@
 {
-  "name": "tslint-loader",
+  "name": "@salecycle/tslint-loader",
   "version": "2.1.5",
   "description": "tslint loader for webpack",
   "main": "index.js",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "loader-utils": "^0.2.7",
+    "minimatch": "^3.0.3",
     "mkdirp": "^0.5.1",
     "object-assign": "^4.0.1",
     "rimraf": "^2.4.4",
