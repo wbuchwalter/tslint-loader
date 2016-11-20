@@ -4,7 +4,7 @@
   "description": "tslint loader for webpack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test/loader.spec.js"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,14 @@
     "object-assign": "^4.0.1",
     "rimraf": "^2.4.4",
     "strip-json-comments": "^1.0.2"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.0.0-beta.3",
+    "chai": "^3.5.0",
+    "enhanced-resolve": "^2.3.0",
+    "mocha": "^3.1.2",
+    "tslint": "^3.15.1",
+    "typescript": "^2.0.10",
+    "webpack": "^1.13.3"
   }
 }
