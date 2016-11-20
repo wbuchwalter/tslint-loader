@@ -1,4 +1,7 @@
 # tslint loader for webpack
+[![Build Status](https://travis-ci.org/wbuchwalter/tslint-loader.svg?branch=master)](https://travis-ci.org/wbuchwalter/tslint-loader)
+[![Dependency Status](https://david-dm.org/wbuchwalter/tslint-loader.svg)](https://david-dm.org/wbuchwalter/tslint-loader)
+[![devDependency Status](https://david-dm.org/wbuchwalter/tslint-loader/dev-status.svg)](https://david-dm.org/wbuchwalter/tslint-loader?type=dev)
 
 ## Usage
 
