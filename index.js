@@ -13,6 +13,7 @@ var typescript = require("typescript");
 var mkdirp = require("mkdirp");
 var rimraf = require("rimraf");
 var objectAssign = require("object-assign");
+var minimatch = require("minimatch");
 
 
 function loadRelativeConfig() {
@@ -27,21 +28,38 @@ function loadRelativeConfig() {
 
 function lint(input, options) {
   //Override options in tslint.json by those passed to the compiler
-  if(this.options.tslint) {    
+  if(this.options.tslint) {
     objectAssign(options, this.options.tslint);
+  }
+
+  if (!!options.ignore) {
+    var resourcePath = this.resourcePath;
+    var shouldIgnore = !!options.ignore.find(function (pattern) {
+      return minimatch(resourcePath, pattern);
+    });
+
+    if (shouldIgnore) {
+      return;
+    }
   }
 
   var bailEnabled = (this.options.bail === true);
 
   //Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
-  objectAssign(options, query);   
-  
-  var linter = new Linter(this.resourcePath, input, options);
+  objectAssign(options, query);
+
+  var program;
+
+  if (options.typeCheck) {
+    program = options.program || Linter.createProgram(tslintConfig.findConfigurationPath(null, this.resourcePath));
+  }
+
+  var linter = new Linter(this.resourcePath, input, options, program);
   var result = linter.lint();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
 
-  report(result, emitter, options.failOnHint, options.fileOutput, this.resourcePath,  bailEnabled);
+  report(result, emitter, options.failOnHint, options.fileOutput, this.resourcePath, bailEnabled);
 }
 
 function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
@@ -100,7 +118,7 @@ module.exports = function(input, map) {
   var callback = this.async();
 
   var config = loadRelativeConfig.call(this);
-  lint.call(this, input, config);  
+  lint.call(this, input, config);
   callback(null, input, map);
 };
 
