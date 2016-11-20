@@ -30,8 +30,7 @@
     "loader-utils": "^0.2.7",
     "mkdirp": "^0.5.1",
     "object-assign": "^4.0.1",
-    "rimraf": "^2.4.4",
-    "strip-json-comments": "^1.0.2"
+    "rimraf": "^2.4.4"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^3.0.0-beta.3",

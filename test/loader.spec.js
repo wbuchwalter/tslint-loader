@@ -83,7 +83,7 @@ describe('TslintLoader', function() {
       expect(result.assets.length).to.eql(0);
       expect(result.chunks.length).to.eql(0);
       expect(result.errors).to.eql([
-        './test/app/engine.ts\nModule build failed: Error: Compilation failed due to tslint errors.\n    at report ('+rootDir+'/index.js:60:11)\n    at Object.lint ('+rootDir+'/index.js:44:3)\n    at Object.module.exports ('+rootDir+'/index.js:103:8)'
+        './test/app/engine.ts\nModule build failed: Error: Compilation failed due to tslint errors.\n    at report ('+rootDir+'/index.js:59:11)\n    at Object.lint ('+rootDir+'/index.js:43:3)\n    at Object.module.exports ('+rootDir+'/index.js:102:8)'
       ]);
       done();
     });

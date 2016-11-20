@@ -5,7 +5,6 @@
 */
 var Linter = require("tslint");
 var tslintConfig = require("tslint/lib/configuration");
-var stripJsonComments = require("strip-json-comments");
 var loaderUtils = require("loader-utils");
 var fs = require("fs");
 var path = require("path");
@@ -27,7 +26,7 @@ function loadRelativeConfig() {
 
 function lint(input, options) {
   //Override options in tslint.json by those passed to the compiler
-  if(this.options.tslint) {    
+  if(this.options.tslint) {
     objectAssign(options, this.options.tslint);
   }
 
@@ -35,8 +34,8 @@ function lint(input, options) {
 
   //Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
-  objectAssign(options, query);   
-  
+  objectAssign(options, query);
+
   var linter = new Linter(this.resourcePath, input, options);
   var result = linter.lint();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
@@ -45,7 +44,7 @@ function lint(input, options) {
 }
 
 function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
-  if(result.failureCount === 0) return;    
+  if(result.failureCount === 0) return;
   emitter(result.output);
 
   if(fileOutputOpts && fileOutputOpts.dir) {
@@ -100,7 +99,7 @@ module.exports = function(input, map) {
   var callback = this.async();
 
   var config = loadRelativeConfig.call(this);
-  lint.call(this, input, config);  
+  lint.call(this, input, config);
   callback(null, input, map);
 };
 
