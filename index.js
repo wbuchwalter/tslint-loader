@@ -25,18 +25,19 @@ function loadRelativeConfig() {
 }
 
 function lint(input, options) {
-  //Override options in tslint.json by those passed to the compiler
-  if(this.options.tslint) {
+  // Override options in tslint.json by those passed to the compiler
+  if (this.options.tslint) {
     objectAssign(options, this.options.tslint);
   }
   var newLintOptions = { fix: false, formatter: "custom", formattersDirectory: __dirname + '/formatters/', rulesDirectory: '' };
   var bailEnabled = (this.options.bail === true);
 
-  //Override options in tslint.json by those passed to the loader as a query string
+  // Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
   objectAssign(options, query);
 
-  var linter = new Lint.Linter(newLintOptions); linter.lint(this.resourcePath, input, options.configuration);
+  var linter = new Lint.Linter(newLintOptions);
+  linter.lint(this.resourcePath, input, options.configuration);
   var result = linter.getResult();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
 
@@ -44,14 +45,14 @@ function lint(input, options) {
 }
 
 function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
-  if(result.failureCount === 0) return;
+  if (result.failureCount === 0) return;
   emitter(result.output);
 
-  if(fileOutputOpts && fileOutputOpts.dir) {
+  if (fileOutputOpts && fileOutputOpts.dir) {
     writeToFile(fileOutputOpts, result);
   }
 
-  if(failOnHint) {
+  if (failOnHint) {
     var messages = "";
     if (bailEnabled){
       messages = "\n\n" + filename + "\n" + result.output;
@@ -63,12 +64,12 @@ function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabl
 var cleaned = false;
 
 function writeToFile(fileOutputOpts, result) {
-  if(fileOutputOpts.clean === true && cleaned === false) {
+  if (fileOutputOpts.clean === true && cleaned === false) {
     rimraf.sync(fileOutputOpts.dir);
     cleaned = true;
   }
 
-  if(result.failures.length) {
+  if (result.failures.length) {
     mkdirp.sync(fileOutputOpts.dir);
 
     var relativePath = path.relative("./", result.failures[0].fileName);
@@ -82,11 +83,11 @@ function writeToFile(fileOutputOpts, result) {
 
     var contents = result.output;
 
-    if(fileOutputOpts.header) {
+    if (fileOutputOpts.header) {
       contents = fileOutputOpts.header + contents;
     }
 
-    if(fileOutputOpts.footer) {
+    if (fileOutputOpts.footer) {
       contents = contents + fileOutputOpts.footer;
     }
 
