@@ -27,6 +27,10 @@ module.exports = {
                 quotemark: [true, 'double']
             }
         },
+        
+        // enables type checked rules like 'for-in-array'
+        // uses tsconfig.json from current working directory
+        typeCheck: false,
 
         // tslint errors are displayed by default as warnings
         // set emitErrors to true to display them as errors

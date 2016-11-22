@@ -36,7 +36,13 @@ function lint(input, options) {
   var query = loaderUtils.parseQuery(this.query);
   objectAssign(options, query);
 
-  var linter = new Lint.Linter(newLintOptions);
+  var program;
+  if (options.typeCheck) {
+    var tsconfigPath = path.resolve(process.cwd(), 'tsconfig.json');
+    program = Lint.Linter.createProgram(tsconfigPath);
+  }
+
+  var linter = new Lint.Linter(newLintOptions, program);
   linter.lint(this.resourcePath, input, options.configuration);
   var result = linter.getResult();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
