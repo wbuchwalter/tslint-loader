@@ -4,6 +4,7 @@
   "description": "tslint loader for webpack",
   "main": "index.js",
   "scripts": {
+    "deploy": "np --skip-cleanup",
     "test": "mocha ./test/loader.spec.js"
   },
   "repository": {
@@ -37,6 +38,7 @@
     "chai": "^3.5.0",
     "enhanced-resolve": "^2.3.0",
     "mocha": "^3.1.2",
+    "np": "^2.10.1",
     "tslint": "^4.0.0",
     "typescript": "^2.0.10",
     "webpack": "^1.13.3"
