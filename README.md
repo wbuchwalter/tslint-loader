@@ -31,6 +31,10 @@ module.exports = {
         // enables type checked rules like 'for-in-array'
         // uses tsconfig.json from current working directory
         typeCheck: false,
+        
+        // can specify a custom config file relative to current directory
+        // 'tslint-custom.json'
+        configFile: false,
 
         // tslint errors are displayed by default as warnings
         // set emitErrors to true to display them as errors

@@ -1,5 +1,5 @@
 app
 dist
-tslint.json
+tslint*
 tsconfig.json
 test

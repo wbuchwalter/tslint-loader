@@ -4,7 +4,6 @@
   based on jshint-loader by Tobias Koppers
 */
 var Lint = require('tslint');
-var tslintConfig = require('tslint/lib/configuration');
 var loaderUtils = require('loader-utils');
 var fs = require('fs');
 var path = require('path');
@@ -13,17 +12,19 @@ var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
 
-
 function resolveOptions(webpackInstance) {
+  var tslintOptions = webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
+  var configFile = tslintOptions.configFile
+    ? path.resolve(process.cwd(), tslintOptions.configFile)
+    : null;
+
   var options = {
      formatter: 'custom',
      formattersDirectory: __dirname + '/formatters/',
-     configuration: tslintConfig.findConfiguration(null, webpackInstance.resourcePath).results
+     configuration: Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results
   };
 
-  if (webpackInstance.options.tslint) {
-    objectAssign(options, webpackInstance.options.tslint);
-  }
+  objectAssign(options, tslintOptions);
 
   // Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(webpackInstance.query);

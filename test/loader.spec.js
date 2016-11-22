@@ -5,7 +5,6 @@ var expect = require('chai').expect;
 var webpack = require('webpack');
 var assign = require('object-assign');
 var webpackConfig = require('./webpack.config');
-var rootDir = path.resolve(__dirname, '..');
 
 describe('TslintLoader', function() {
   it('should lint typescript files and output warning', function(done) {
@@ -33,6 +32,22 @@ describe('TslintLoader', function() {
             'no-console': [false]
           }
         }
+      }
+    });
+
+    webpack(localConfig, function(err, stats) {
+      if (err) return done(err);
+
+      expect(stats.hasErrors()).to.be.false;
+      expect(stats.hasWarnings()).to.be.false;
+      done();
+    });
+  });
+
+  it('should use custom tslint file when option given', function(done) {
+    var localConfig = assign({}, webpackConfig, {
+      tslint: {
+        configFile: 'tslint-custom.json'
       }
     });
 
@@ -114,9 +129,7 @@ describe('TslintLoader', function() {
       var result = stats.toJson();
       expect(result.assets.length).to.eql(0);
       expect(result.chunks.length).to.eql(0);
-      expect(result.errors).to.eql([
-        './test/app/engine.ts\nModule build failed: Error: Compilation failed due to tslint errors.\n    at report ('+rootDir+'/index.js:66:11)\n    at lint ('+rootDir+'/index.js:50:3)\n    at Object.module.exports ('+rootDir+'/index.js:109:3)'
-      ]);
+      expect(result.errors[0]).to.contain('Module build failed: Error: Compilation failed due to tslint errors.');
       done();
     });
   });
