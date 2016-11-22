@@ -66,6 +66,38 @@ describe('TslintLoader', function() {
     });
   });
 
+  it('should accept options from query string also', function(done) {
+    var localConfig = assign({}, webpackConfig, {
+      module: {
+        preLoaders: [
+          {
+            test: /\.ts$/,
+            loader: './index?emitErrors=true'
+          }
+        ],
+        loaders: [
+          {
+            test: /\.ts$/,
+            loader: 'awesome-typescript-loader'
+          }
+        ]
+      }
+    });
+
+    webpack(localConfig, function(err, stats) {
+      if (err) return done(err);
+
+      expect(stats.hasErrors()).to.be.true;
+      expect(stats.hasWarnings()).to.be.false;
+
+      var result = stats.toJson();
+      expect(result.errors).to.eql([
+        './test/app/engine.ts\n[8, 1]: Calls to \'console.log\' are not allowed.\n'
+      ]);
+      done();
+    });
+  });
+
   it('should fail on linting failure when forced to', function(done) {
     var localConfig = assign({}, webpackConfig, {
       tslint: {
@@ -83,7 +115,7 @@ describe('TslintLoader', function() {
       expect(result.assets.length).to.eql(0);
       expect(result.chunks.length).to.eql(0);
       expect(result.errors).to.eql([
-        './test/app/engine.ts\nModule build failed: Error: Compilation failed due to tslint errors.\n    at report ('+rootDir+'/index.js:66:11)\n    at Object.lint ('+rootDir+'/index.js:50:3)\n    at Object.module.exports ('+rootDir+'/index.js:109:8)'
+        './test/app/engine.ts\nModule build failed: Error: Compilation failed due to tslint errors.\n    at report ('+rootDir+'/index.js:66:11)\n    at lint ('+rootDir+'/index.js:50:3)\n    at Object.module.exports ('+rootDir+'/index.js:109:3)'
       ]);
       done();
     });

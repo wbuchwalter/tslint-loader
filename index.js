@@ -3,38 +3,38 @@
   Author William Buchwalter
   based on jshint-loader by Tobias Koppers
 */
-var Lint = require("tslint");
-var tslintConfig = require("tslint/lib/configuration");
-var loaderUtils = require("loader-utils");
-var fs = require("fs");
-var path = require("path");
-var typescript = require("typescript");
-var mkdirp = require("mkdirp");
-var rimraf = require("rimraf");
-var objectAssign = require("object-assign");
+var Lint = require('tslint');
+var tslintConfig = require('tslint/lib/configuration');
+var loaderUtils = require('loader-utils');
+var fs = require('fs');
+var path = require('path');
+var typescript = require('typescript');
+var mkdirp = require('mkdirp');
+var rimraf = require('rimraf');
+var objectAssign = require('object-assign');
 
 
-function loadRelativeConfig() {
+function resolveOptions(webpackInstance) {
   var options = {
-     formatter: "custom",
+     formatter: 'custom',
      formattersDirectory: __dirname + '/formatters/',
-     configuration: tslintConfig.findConfiguration(null, this.resourcePath).results
+     configuration: tslintConfig.findConfiguration(null, webpackInstance.resourcePath).results
   };
+
+  if (webpackInstance.options.tslint) {
+    objectAssign(options, webpackInstance.options.tslint);
+  }
+
+  // Override options in tslint.json by those passed to the loader as a query string
+  var query = loaderUtils.parseQuery(webpackInstance.query);
+  objectAssign(options, query);
 
   return options;
 }
 
-function lint(input, options) {
-  // Override options in tslint.json by those passed to the compiler
-  if (this.options.tslint) {
-    objectAssign(options, this.options.tslint);
-  }
-  var newLintOptions = { fix: false, formatter: "custom", formattersDirectory: __dirname + '/formatters/', rulesDirectory: '' };
-  var bailEnabled = (this.options.bail === true);
-
-  // Override options in tslint.json by those passed to the loader as a query string
-  var query = loaderUtils.parseQuery(this.query);
-  objectAssign(options, query);
+function lint(webpackInstance, input, options) {
+  var newLintOptions = { fix: false, formatter: 'custom', formattersDirectory: __dirname + '/formatters/', rulesDirectory: '' };
+  var bailEnabled = (webpackInstance.options.bail === true);
 
   var program;
   if (options.typeCheck) {
@@ -43,11 +43,11 @@ function lint(input, options) {
   }
 
   var linter = new Lint.Linter(newLintOptions, program);
-  linter.lint(this.resourcePath, input, options.configuration);
+  linter.lint(webpackInstance.resourcePath, input, options.configuration);
   var result = linter.getResult();
-  var emitter = options.emitErrors ? this.emitError : this.emitWarning;
+  var emitter = options.emitErrors ? webpackInstance.emitError : webpackInstance.emitWarning;
 
-  report(result, emitter, options.failOnHint, options.fileOutput, this.resourcePath,  bailEnabled);
+  report(result, emitter, options.failOnHint, options.fileOutput, webpackInstance.resourcePath,  bailEnabled);
 }
 
 function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
@@ -59,11 +59,11 @@ function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabl
   }
 
   if (failOnHint) {
-    var messages = "";
+    var messages = '';
     if (bailEnabled){
-      messages = "\n\n" + filename + "\n" + result.output;
+      messages = '\n\n' + filename + '\n' + result.output;
     }
-    throw new Error("Compilation failed due to tslint errors." +  messages);
+    throw new Error('Compilation failed due to tslint errors.' +  messages);
   }
 }
 
@@ -78,14 +78,14 @@ function writeToFile(fileOutputOpts, result) {
   if (result.failures.length) {
     mkdirp.sync(fileOutputOpts.dir);
 
-    var relativePath = path.relative("./", result.failures[0].fileName);
+    var relativePath = path.relative('./', result.failures[0].fileName);
 
     var targetPath = path.join(fileOutputOpts.dir, path.dirname(relativePath));
     mkdirp.sync(targetPath);
 
-    var extension = fileOutputOpts.ext || "txt";
+    var extension = fileOutputOpts.ext || 'txt';
 
-    var targetFilePath = path.join(fileOutputOpts.dir, relativePath + "." + extension);
+    var targetFilePath = path.join(fileOutputOpts.dir, relativePath + '.' + extension);
 
     var contents = result.output;
 
@@ -105,8 +105,8 @@ module.exports = function(input, map) {
   this.cacheable && this.cacheable();
   var callback = this.async();
 
-  var config = loadRelativeConfig.call(this);
-  lint.call(this, input, config);
+  var options = resolveOptions(this);
+  lint(this, input, options);
   callback(null, input, map);
 };
 
