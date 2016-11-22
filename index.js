@@ -3,7 +3,7 @@
   Author William Buchwalter
   based on jshint-loader by Tobias Koppers
 */
-var Linter = require("tslint");
+var Lint = require("tslint");
 var tslintConfig = require("tslint/lib/configuration");
 var loaderUtils = require("loader-utils");
 var fs = require("fs");
@@ -18,7 +18,7 @@ function loadRelativeConfig() {
   var options = {
      formatter: "custom",
      formattersDirectory: __dirname + '/formatters/',
-     configuration: tslintConfig.findConfiguration(null, this.resourcePath)
+     configuration: tslintConfig.findConfiguration(null, this.resourcePath).results
   };
 
   return options;
@@ -29,15 +29,15 @@ function lint(input, options) {
   if(this.options.tslint) {
     objectAssign(options, this.options.tslint);
   }
-
+  var newLintOptions = { fix: false, formatter: "custom", formattersDirectory: __dirname + '/formatters/', rulesDirectory: '' };
   var bailEnabled = (this.options.bail === true);
 
   //Override options in tslint.json by those passed to the loader as a query string
   var query = loaderUtils.parseQuery(this.query);
   objectAssign(options, query);
 
-  var linter = new Linter(this.resourcePath, input, options);
-  var result = linter.lint();
+  var linter = new Lint.Linter(newLintOptions); linter.lint(this.resourcePath, input, options.configuration);
+  var result = linter.getResult();
   var emitter = options.emitErrors ? this.emitError : this.emitWarning;
 
   report(result, emitter, options.failOnHint, options.fileOutput, this.resourcePath,  bailEnabled);
