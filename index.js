@@ -34,7 +34,7 @@ function resolveOptions(webpackInstance) {
 }
 
 function lint(webpackInstance, input, options) {
-  var newLintOptions = { fix: false, formatter: 'custom', formattersDirectory: __dirname + '/formatters/', rulesDirectory: '' };
+  var newLintOptions = { fix: false, formatter: options.formatter || 'custom', formattersDirectory: options.formattersDirectory || __dirname + '/formatters/', rulesDirectory: '' };
   var bailEnabled = (webpackInstance.options.bail === true);
 
   var program;
