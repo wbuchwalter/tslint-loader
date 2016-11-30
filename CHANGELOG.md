@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- Fix custom formatters, fixes [#46](https://github.com/wbuchwalter/tslint-loader/issues/46)
+
 ## 3.2.0
 
 - Enable custom config file, fixes [#22](https://github.com/wbuchwalter/tslint-loader/issues/22)
