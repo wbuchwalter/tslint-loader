@@ -163,4 +163,23 @@ describe('TslintLoader', function() {
       done();
     });
   });
+
+  it('should use custom formatter with custom directory', function(done) {
+    var localConfig = assign({}, webpackConfig, {
+      tslint: {
+        formattersDirectory: 'test/formatters/',
+        formatter: 'simple',
+      }
+    });
+
+    webpack(localConfig, function(err, stats) {
+      if (err) return done(err);
+
+      var result = stats.toJson();
+      expect(result.warnings).to.eql([
+        './test/app/engine.ts\nCalls to \'console.log\' are not allowed.\n'
+      ]);
+      done();
+    });
+  });
 });
