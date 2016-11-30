@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint --ext .js .",
     "deploy": "np --skip-cleanup",
-    "test": "mocha ./test/loader.spec.js --timeout 3000"
+    "test": "mocha ./test/loader.spec.js --timeout 5000"
   },
   "repository": {
     "type": "git",
