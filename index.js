@@ -7,7 +7,6 @@ var Lint = require('tslint');
 var loaderUtils = require('loader-utils');
 var fs = require('fs');
 var path = require('path');
-var typescript = require('typescript');
 var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
