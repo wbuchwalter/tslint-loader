@@ -4,9 +4,10 @@
   "description": "tslint loader for webpack",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --ext .js .",
     "deploy": "np --skip-cleanup",
-    "test": "mocha ./test/loader.spec.js --timeout 5000"
+    "lint": "eslint --ext .js .",
+    "mocha": "mocha ./test/loader.spec.js --timeout 5000",
+    "test": "npm run mocha && npm run lint"
   },
   "repository": {
     "type": "git",
