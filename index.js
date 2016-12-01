@@ -13,36 +13,38 @@ var objectAssign = require('object-assign');
 
 function resolveOptions(webpackInstance) {
   var tslintOptions = webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
-  var configFile = tslintOptions.configFile
-    ? path.resolve(process.cwd(), tslintOptions.configFile)
+  var query = loaderUtils.parseQuery(webpackInstance.query);
+
+  var options = objectAssign({}, tslintOptions, query);
+
+  var configFile = options.configFile
+    ? path.resolve(process.cwd(), options.configFile)
     : null;
 
-  var options = {
-     formatter: 'custom',
-     formattersDirectory: __dirname + '/formatters/',
-     configuration: Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results
-  };
-
-  objectAssign(options, tslintOptions);
-
-  // Override options in tslint.json by those passed to the loader as a query string
-  var query = loaderUtils.parseQuery(webpackInstance.query);
-  objectAssign(options, query);
+  options.formatter = options.formatter || 'custom';
+  options.formattersDirectory = options.formattersDirectory || __dirname + '/formatters/';
+  options.configuration = options.configuration || Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
+  options.tsConfigFile = options.tsConfigFile || 'tsconfig.json';
 
   return options;
 }
 
 function lint(webpackInstance, input, options) {
-  var newLintOptions = { fix: false, formatter: options.formatter || 'custom', formattersDirectory: options.formattersDirectory || __dirname + '/formatters/', rulesDirectory: '' };
+  var lintOptions = {
+    fix: false,
+    formatter: options.formatter,
+    formattersDirectory: options.formattersDirectory,
+    rulesDirectory: ''
+  };
   var bailEnabled = (webpackInstance.options.bail === true);
 
   var program;
   if (options.typeCheck) {
-    var tsconfigPath = path.resolve(process.cwd(), 'tsconfig.json');
+    var tsconfigPath = path.resolve(process.cwd(), options.tsConfigFile);
     program = Lint.Linter.createProgram(tsconfigPath);
   }
 
-  var linter = new Lint.Linter(newLintOptions, program);
+  var linter = new Lint.Linter(lintOptions, program);
   linter.lint(webpackInstance.resourcePath, input, options.configuration);
   var result = linter.getResult();
   var emitter = options.emitErrors ? webpackInstance.emitError : webpackInstance.emitWarning;
