@@ -4,7 +4,7 @@
 [![devDependency Status](https://david-dm.org/wbuchwalter/tslint-loader/dev-status.svg)](https://david-dm.org/wbuchwalter/tslint-loader?type=dev)
 [![peerDependency Status](https://david-dm.org/wbuchwalter/tslint-loader/peer-status.svg)](https://david-dm.org/wbuchwalter/tslint-loader?type=peer)
 
-Tslint loader for Webpack
+Tslint loader for Webpack.
 
 ## Installation
 
@@ -14,7 +14,7 @@ npm install tslint-loader --save-dev
 
 ## Usage
 
-Apply the tslint loader as pre/postLoader in your webpack configuration:
+Apply the tslint loader as preLoader in your webpack configuration.
 
 ``` javascript
 module.exports = {
