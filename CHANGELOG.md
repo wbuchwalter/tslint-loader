@@ -1,5 +1,10 @@
 # Changelog
 
+### 3.2.2
+
+- Add ability to specify tsconfig.json for type checked rules, 
+fixes [#45](https://github.com/wbuchwalter/tslint-loader/issues/45)
+
 ## 3.2.1
 
 - Fix custom formatters, fixes [#46](https://github.com/wbuchwalter/tslint-loader/issues/46)
