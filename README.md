@@ -6,6 +6,12 @@
 
 Tslint loader for Webpack
 
+## Installation
+
+``` shell
+npm install tslint-loader --save-dev
+```
+
 ## Usage
 
 Apply the tslint loader as pre/postLoader in your webpack configuration:
@@ -27,11 +33,7 @@ module.exports = {
                 quotemark: [true, 'double']
             }
         },
-        
-        // enables type checked rules like 'for-in-array'
-        // uses tsconfig.json from current working directory
-        typeCheck: false,
-        
+
         // can specify a custom config file relative to current directory
         // 'tslint-custom.json'
         configFile: false,
@@ -43,14 +45,22 @@ module.exports = {
         // tslint does not interrupt the compilation by default
         // if you want any file with tslint errors to fail
         // set failOnHint to true
-        failOnHint: true,        
+        failOnHint: true,
+
+        // enables type checked rules like 'for-in-array'
+        // uses tsconfig.json from current working directory
+        typeCheck: false,
+
+        // can specify a custom tsconfig file relative to current directory
+        // to be used with type checked rules
+        tsConfigFile: 'tsconfig.json',
 
         // name of your formatter (optional)
         formatter: 'yourformatter',
 
         // path to directory containing formatter (optional)
         formattersDirectory: 'node_modules/tslint-loader/formatters/',
-        
+
         // These options are useful if you want to save output to files
         // for your continuous integration server
         fileOutput: {
@@ -74,14 +84,9 @@ module.exports = {
     }
 }
 ```
-## Installation
-
-``` shell
-npm install tslint-loader --save-dev
-```
 
 ## License
 
-MIT (http://www.opensource.org/licenses/mit-license.php)
+[MIT](http://www.opensource.org/licenses/mit-license.php)
 
 
