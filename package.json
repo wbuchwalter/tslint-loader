@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/wbuchwalter/tslint-loader",
   "peerDependencies": {
-    "tslint": "^4.0.0"
+    "tslint": "^4.0.0-dev"
   },
   "dependencies": {
     "loader-utils": "^0.2.7",
