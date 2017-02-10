@@ -31,7 +31,7 @@ function resolveOptions(webpackInstance) {
 
 function lint(webpackInstance, input, options) {
   var lintOptions = {
-    fix: false,
+    fix: options.fix === undefined ? false : options.fix,
     formatter: options.formatter,
     formattersDirectory: options.formattersDirectory,
     rulesDirectory: ''
