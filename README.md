@@ -9,8 +9,10 @@ Tslint loader for Webpack.
 ## Installation
 
 ``` shell
-npm install tslint-loader --save-dev
+npm install tslint tslint-loader --save-dev
 ```
+
+The package depends on Tslint 4.0+, no longer works with 3.* versions.
 
 ## Usage
 
