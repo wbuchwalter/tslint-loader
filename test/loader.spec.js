@@ -21,11 +21,9 @@ describe('TslintLoader', function() {
 
   it('should overwrite configuration in tslint json', function() {
     return webpackRunner({
-      tslint: {
-        configuration: {
-          rules: {
-            'no-console': [false]
-          }
+      configuration: {
+        rules: {
+          'no-console': [false]
         }
       }
     }).then(function(stats) {
@@ -36,9 +34,7 @@ describe('TslintLoader', function() {
 
   it('should use custom tslint file when option given', function() {
     return webpackRunner({
-      tslint: {
-        configFile: 'tslint-custom.json'
-      }
+      configFile: 'tslint-custom.json'
     }).then(function(stats) {
       expect(stats.hasErrors()).to.be.false;
       expect(stats.hasWarnings()).to.be.false;
@@ -47,9 +43,7 @@ describe('TslintLoader', function() {
 
   it('should emit linting failure as error when forced to', function() {
     return webpackRunner({
-      tslint: {
-        emitErrors: true
-      }
+      emitErrors: true
     }).then(function(stats) {
       expect(stats.hasErrors()).to.be.true;
       expect(stats.hasWarnings()).to.be.false;
@@ -62,15 +56,14 @@ describe('TslintLoader', function() {
   });
 
   it('should accept options from query string also', function() {
-    return webpackRunner({
+    return webpackRunner(null, {
       module: {
-        preLoaders: [
+        loaders: [
           {
             test: /\.ts$/,
+            enforce: 'pre',
             loader: './index?emitErrors=true'
-          }
-        ],
-        loaders: [
+          },
           {
             test: /\.ts$/,
             loader: 'awesome-typescript-loader',
@@ -91,32 +84,27 @@ describe('TslintLoader', function() {
 
   it('should fail on linting failure when forced to', function() {
     return webpackRunner({
-      tslint: {
-        failOnHint: true
-      }
+      failOnHint: true
     }).then(function(stats) {
       expect(stats.hasErrors()).to.be.true;
       expect(stats.hasWarnings()).to.be.true;
 
       var result = stats.toJson();
-      expect(result.assets.length).to.eql(0);
-      expect(result.chunks.length).to.eql(0);
       expect(result.errors[0]).to.contain('Module build failed: Error: Compilation failed due to tslint errors.');
     });
   });
 
   it('should use type checked rules when forced to', function() {
     return webpackRunner({
+      typeCheck: true,
+      configuration: {
+        rules: {
+          'no-for-in-array': true
+        }
+      }
+    }, {
       entry: {
         engine: path.resolve(__dirname, 'app', 'for-in-array.ts')
-      },
-      tslint: {
-        typeCheck: true,
-        configuration: {
-          rules: {
-            'no-for-in-array': true
-          }
-        }
       }
     }).then(function(stats) {
       expect(stats.hasErrors()).to.be.false;
@@ -132,17 +120,16 @@ describe('TslintLoader', function() {
 
   it('should use type checked rules also with custom tsconfig file', function() {
     return webpackRunner({
+      typeCheck: true,
+      tsConfigFile: 'test/tsconfig.json',
+      configuration: {
+        rules: {
+          'no-for-in-array': true
+        }
+      }
+    }, {
       entry: {
         engine: path.resolve(__dirname, 'app', 'for-in-array.ts')
-      },
-      tslint: {
-        typeCheck: true,
-        tsConfigFile: 'test/tsconfig.json',
-        configuration: {
-          rules: {
-            'no-for-in-array': true
-          }
-        }
       }
     }).then(function(stats) {
       expect(stats.hasErrors()).to.be.false;
@@ -158,10 +145,8 @@ describe('TslintLoader', function() {
 
   it('should use custom formatter with custom directory', function() {
     return webpackRunner({
-      tslint: {
-        formattersDirectory: 'test/formatters/',
-        formatter: 'simple',
-      }
+      formattersDirectory: 'test/formatters/',
+      formatter: 'simple'
     }).then(function(stats) {
       var result = stats.toJson();
       expect(result.warnings).to.eql([

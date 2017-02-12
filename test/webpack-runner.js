@@ -5,10 +5,11 @@ var assign = require('object-assign');
 var promisify = require('es6-promisify');
 var webpackConfig = require('./webpack.config');
 
-module.exports = function(additionalConfig) {
-  additionalConfig = additionalConfig || {};
+module.exports = function(tslintConfig, additionalConfig) {
+  var basicConfig = webpackConfig();
+  if (tslintConfig) {
+    basicConfig.module.rules[0].options = tslintConfig;
+  }
 
-  return promisify(webpack)(
-    assign({}, webpackConfig, additionalConfig)
-  );
+  return promisify(webpack)(assign(basicConfig, additionalConfig));
 };
