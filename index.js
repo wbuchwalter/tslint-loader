@@ -3,6 +3,8 @@
   Author William Buchwalter
   based on jshint-loader by Tobias Koppers
 */
+'use strict';
+
 var Lint = require('tslint');
 var loaderUtils = require('loader-utils');
 var fs = require('fs');
@@ -11,6 +13,12 @@ var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
 
+function resolveFile(configPath) {
+  return path.isAbsolute(configPath)
+    ? configPath
+    : path.resolve(process.cwd(), configPath)
+}
+
 function resolveOptions(webpackInstance) {
   var tslintOptions = webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
   var query = loaderUtils.parseQuery(webpackInstance.query);
@@ -18,7 +26,7 @@ function resolveOptions(webpackInstance) {
   var options = objectAssign({}, tslintOptions, query);
 
   var configFile = options.configFile
-    ? path.resolve(process.cwd(), options.configFile)
+    ? resolveFile(options.configFile)
     : null;
 
   options.formatter = options.formatter || 'custom';
@@ -41,7 +49,7 @@ function lint(webpackInstance, input, options) {
 
   var program;
   if (options.typeCheck) {
-    var tsconfigPath = path.resolve(process.cwd(), options.tsConfigFile);
+    var tsconfigPath = resolveFile(options.tsConfigFile);
     program = Lint.Linter.createProgram(tsconfigPath);
   }
 

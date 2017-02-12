@@ -34,7 +34,7 @@ module.exports = {
             }
         },
 
-        // can specify a custom config file relative to current directory
+        // can specify a custom config file relative to current directory or with absolute path
         // 'tslint-custom.json'
         configFile: false,
 
@@ -54,7 +54,7 @@ module.exports = {
         // automatically fix linting errors
         fix: false,
 
-        // can specify a custom tsconfig file relative to current directory
+        // can specify a custom tsconfig file relative to current directory or with absolute path
         // to be used with type checked rules
         tsConfigFile: 'tsconfig.json',
 
