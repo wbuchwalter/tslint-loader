@@ -12,6 +12,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
+var semver = require('semver');
 
 function resolveFile(configPath) {
   return path.isAbsolute(configPath)
@@ -115,6 +116,10 @@ function writeToFile(fileOutputOpts, result) {
 module.exports = function(input, map) {
   this.cacheable && this.cacheable();
   var callback = this.async();
+
+  if (!semver.satisfies(Lint.Linter.VERSION, '^4.0.0')) {
+    throw new Error('Tslint should be of version 4+');
+  }
 
   var options = resolveOptions(this);
   lint(this, input, options);

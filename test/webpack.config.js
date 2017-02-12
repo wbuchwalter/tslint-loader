@@ -20,7 +20,7 @@ module.exports = {
       {
         test: /\.ts$/,
         loader: 'awesome-typescript-loader',
-        query: { forkCheckerSilent: true }
+        query: { silent: true }
       }
     ]
   },
