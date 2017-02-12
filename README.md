@@ -50,6 +50,9 @@ module.exports = {
         // enables type checked rules like 'for-in-array'
         // uses tsconfig.json from current working directory
         typeCheck: false,
+        
+        // automatically fix linting errors
+        fix: false,
 
         // can specify a custom tsconfig file relative to current directory
         // to be used with type checked rules

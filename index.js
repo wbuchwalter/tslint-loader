@@ -25,13 +25,14 @@ function resolveOptions(webpackInstance) {
   options.formattersDirectory = options.formattersDirectory || __dirname + '/formatters/';
   options.configuration = options.configuration || Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
   options.tsConfigFile = options.tsConfigFile || 'tsconfig.json';
+  options.fix = options.fix || false;
 
   return options;
 }
 
 function lint(webpackInstance, input, options) {
   var lintOptions = {
-    fix: options.fix === undefined ? false : options.fix,
+    fix: options.fix,
     formatter: options.formatter,
     formattersDirectory: options.formattersDirectory,
     rulesDirectory: ''
