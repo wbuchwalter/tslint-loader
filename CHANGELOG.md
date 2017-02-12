@@ -1,5 +1,11 @@
 # Changelog
 
+### 3.4.0
+
+- Add option for automatic style fixing,
+fixes [#54](https://github.com/wbuchwalter/tslint-loader/issues/54)
+- Enable absolute paths in config file path
+
 ### 3.3.0
 
 - Add ability to specify tsconfig.json for type checked rules, 
