@@ -1,5 +1,9 @@
 # Changelog
 
+### 3.4.1
+
+- Add explicit version check for Tslint
+
 ### 3.4.0
 
 - Add option for automatic style fixing,
