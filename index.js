@@ -32,11 +32,23 @@ function resolveOptions(webpackInstance) {
 
   options.formatter = options.formatter || 'custom';
   options.formattersDirectory = options.formattersDirectory || __dirname + '/formatters/';
-  options.configuration = options.configuration || Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
+  options.configuration = parseConfigFile(webpackInstance, configFile, options);
   options.tsConfigFile = options.tsConfigFile || 'tsconfig.json';
   options.fix = options.fix || false;
 
   return options;
+}
+
+function parseConfigFile(webpackInstance, configFile, options) {
+  if (!options.configuration) {
+    return Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
+  }
+
+  if (semver.satisfies(Lint.Linter.VERSION, '>=5.0.0')) {
+    return Lint.Configuration.parseConfigFile(options.configuration);
+  }
+
+  return options.configuration;
 }
 
 function lint(webpackInstance, input, options) {
