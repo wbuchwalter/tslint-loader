@@ -13,9 +13,9 @@ describe('TslintLoader', function() {
       var result = stats.toJson();
       expect(result.assets.length).to.eql(1);
       expect(result.chunks.length).to.eql(1);
-      expect(result.warnings).to.eql([
-        './test/app/engine.ts\n[8, 1]: Calls to \'console.log\' are not allowed.\n'
-      ]);
+      expect(result.warnings[0]).to.contain(
+        '[8, 1]: Calls to \'console.log\' are not allowed.'
+      );
     });
   });
 
@@ -49,9 +49,9 @@ describe('TslintLoader', function() {
       expect(stats.hasWarnings()).to.be.false;
 
       var result = stats.toJson();
-      expect(result.errors).to.eql([
-        './test/app/engine.ts\n[8, 1]: Calls to \'console.log\' are not allowed.\n'
-      ]);
+      expect(result.errors[0]).to.contain(
+        '[8, 1]: Calls to \'console.log\' are not allowed.'
+      );
     });
   });
 
@@ -76,9 +76,9 @@ describe('TslintLoader', function() {
       expect(stats.hasWarnings()).to.be.false;
 
       var result = stats.toJson();
-      expect(result.errors).to.eql([
-        './test/app/engine.ts\n[8, 1]: Calls to \'console.log\' are not allowed.\n'
-      ]);
+      expect(result.errors[0]).to.contain(
+        '[8, 1]: Calls to \'console.log\' are not allowed.'
+      );
     });
   });
 
@@ -112,9 +112,9 @@ describe('TslintLoader', function() {
 
       var result = stats.toJson();
 
-      expect(result.warnings).to.eql([
-        './test/app/for-in-array.ts\n[4, 1]: for-in loops over arrays are forbidden. Use for-of or array.forEach instead.\n'
-      ]);
+      expect(result.warnings[0]).to.contain(
+        '[4, 1]: for-in loops over arrays are forbidden. Use for-of or array.forEach instead.'
+      );
     });
   });
 
@@ -137,8 +137,8 @@ describe('TslintLoader', function() {
 
       var result = stats.toJson();
 
-      expect(result.warnings).to.eql([
-        './test/app/for-in-array.ts\n[4, 1]: for-in loops over arrays are forbidden. Use for-of or array.forEach instead.\n'
+      expect(result.warnings[0]).to.contain([
+        '[4, 1]: for-in loops over arrays are forbidden. Use for-of or array.forEach instead.'
       ]);
     });
   });
@@ -149,9 +149,9 @@ describe('TslintLoader', function() {
       formatter: 'simple'
     }).then(function(stats) {
       var result = stats.toJson();
-      expect(result.warnings).to.eql([
-        './test/app/engine.ts\nCalls to \'console.log\' are not allowed.\n'
-      ]);
+      expect(result.warnings[0]).to.contain(
+        'Calls to \'console.log\' are not allowed.'
+      );
     });
   });
 });
