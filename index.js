@@ -45,7 +45,7 @@ function parseConfigFile(webpackInstance, configFile, options) {
   }
 
   if (semver.satisfies(Lint.Linter.VERSION, '>=5.0.0')) {
-    return Lint.Configuration.parseConfigFile(options.configuration);
+    return Lint.Configuration.loadConfigurationFromPath(configFile,configFile);
   }
 
   return options.configuration;
