@@ -1,5 +1,10 @@
-app
-dist
-tslint*
+*.iml
+.idea
+.editorconfig
+.gitignore
+.npmignore
+.travis.yml
+package-lock.json
 tsconfig.json
+tslint.json
 test

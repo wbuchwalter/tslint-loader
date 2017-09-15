@@ -1,15 +1,14 @@
 {
   "compileOnSave": false,
-  "buildOnSave": false,
   "compilerOptions": {
+    "lib": [
+      "es2015",
+      "es2016",
+      "dom"
+    ],
     "target": "es5",
     "module": "commonjs",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "sourceMap": true
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  }
 }

@@ -1,6 +1,19 @@
 {
-  "extends": "tslint:recommended",
+  "rulesDirectory": [
+    "node_modules/tslint-microsoft-contrib"
+  ],
+  "extends": "tslint-microsoft-contrib",
   "rules": {
-    "quotemark": [true, "single", "avoid-escape"]
+    "chai-vague-errors": false,
+    "completed-docs": false,
+    "export-name": false,
+    "match-default-export-name": false,
+    "missing-jsdoc": false,
+    "newline-before-return": false,
+    "no-default-export": false,
+    "no-invalid-this": false,
+    "no-relative-imports": false,
+    "promise-function-async": false,
+    "no-console": false
   }
 }
