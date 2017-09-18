@@ -1,6 +1,4 @@
+*.iml
 .idea
 node_modules
-npm-debug.log
-*.tgz
-dist
-test/dist
+*.js

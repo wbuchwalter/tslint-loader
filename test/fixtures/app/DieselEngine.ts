@@ -1,6 +1,5 @@
-
 export class DieselEngine {
-  public toString() {
+  public toString(): string {
     return 'Diesel';
   }
 }
