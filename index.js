@@ -71,26 +71,38 @@ function lint(webpackInstance, input, options) {
   var result = linter.getResult();
   var emitter = options.emitErrors ? webpackInstance.emitError : webpackInstance.emitWarning;
 
-  report(result, emitter, options.failOnHint, options.fileOutput, webpackInstance.resourcePath,  bailEnabled);
+  report(result, emitter, webpackInstance.emitWarning, options.failOnHint, options.fileOutput, webpackInstance.resourcePath, bailEnabled);
 }
 
-function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
+function report(result, emitter, warningEmitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
+  var isFailOnHintObj = typeof failOnHint === 'object' && failOnHint !== null
+  if (result.failureCount === 0) return;
+  if (isFailOnHintObj && failOnHint.ignoreWarnings && result.errorCount === 0) {
+    if (failOnHint.displayWarnings) {
+      var err = new Error(result.output);
+      delete err.stack;
+      warningEmitter(err);
+    }
+    return;
+  }
   if (result.failureCount === 0) return;
   if (result.failures && result.failures.length === 0) return;
-  var err = new Error(result.output);
-  delete err.stack;
-  emitter(err);
+
+  var error = new Error(result.output);
+  delete error.stack;
+  emitter(error);
 
   if (fileOutputOpts && fileOutputOpts.dir) {
     writeToFile(fileOutputOpts, result);
   }
 
   if (failOnHint) {
+    if (isFailOnHintObj && failOnHint.silent) return;
     var messages = '';
     if (bailEnabled){
       messages = '\n\n' + filename + '\n' + result.output;
     }
-    throw new Error('Compilation failed due to tslint errors.' +  messages);
+    throw new Error('Compilation failed due to tslint errors.' + messages);
   }
 }
 
