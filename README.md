@@ -18,6 +18,23 @@ The package depends on Tslint 4.0+, no longer works with 3.* versions.
 
 Apply the tslint loader as preLoader in your webpack configuration.
 
+### Webpack 3
+
+```javascript
+module.exports = {
+    module: {
+        loaders: [
+            {
+                test: /\.ts$/,
+                enforce: 'pre',
+                loader: 'tslint-loader',
+                options: { /* Loader options go here */ }
+            }
+        ]
+    }
+}
+```
+
 ### Webpack 2
 
 ```javascript
