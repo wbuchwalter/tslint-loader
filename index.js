@@ -21,7 +21,7 @@ function resolveFile(configPath) {
 }
 
 function resolveOptions(webpackInstance) {
-  var tslintOptions = webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
+  var tslintOptions = webpackInstance.options && webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
   var query = loaderUtils.getOptions(webpackInstance);
 
   var options = objectAssign({}, tslintOptions, query);
@@ -58,7 +58,7 @@ function lint(webpackInstance, input, options) {
     formattersDirectory: options.formattersDirectory,
     rulesDirectory: ''
   };
-  var bailEnabled = (webpackInstance.options.bail === true);
+  var bailEnabled = (webpackInstance.options && webpackInstance.options.bail === true);
 
   var program;
   if (options.typeCheck) {
