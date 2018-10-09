@@ -21,7 +21,7 @@ function resolveFile(configPath) {
 }
 
 function resolveOptions(webpackInstance) {
-  var tslintOptions = webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
+  var tslintOptions = webpackInstance.options && webpackInstance.options.tslint ? webpackInstance.options.tslint : {};
   var query = loaderUtils.getOptions(webpackInstance);
 
   var options = objectAssign({}, tslintOptions, query);
@@ -32,11 +32,23 @@ function resolveOptions(webpackInstance) {
 
   options.formatter = options.formatter || 'custom';
   options.formattersDirectory = options.formattersDirectory || __dirname + '/formatters/';
-  options.configuration = options.configuration || Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
+  options.configuration = parseConfigFile(webpackInstance, configFile, options);
   options.tsConfigFile = options.tsConfigFile || 'tsconfig.json';
   options.fix = options.fix || false;
 
   return options;
+}
+
+function parseConfigFile(webpackInstance, configFile, options) {
+  if (!options.configuration) {
+    return Lint.Linter.findConfiguration(configFile, webpackInstance.resourcePath).results;
+  }
+
+  if (semver.satisfies(Lint.Linter.VERSION, '>=5.0.0')) {
+    return Lint.Configuration.parseConfigFile(options.configuration);
+  }
+
+  return options.configuration;
 }
 
 function lint(webpackInstance, input, options) {
@@ -44,9 +56,9 @@ function lint(webpackInstance, input, options) {
     fix: options.fix,
     formatter: options.formatter,
     formattersDirectory: options.formattersDirectory,
-    rulesDirectory: ''
+    rulesDirectory: options.rulesDirectory
   };
-  var bailEnabled = (webpackInstance.options.bail === true);
+  var bailEnabled = (webpackInstance.options && webpackInstance.options.bail === true);
 
   var program;
   if (options.typeCheck) {
@@ -64,6 +76,7 @@ function lint(webpackInstance, input, options) {
 
 function report(result, emitter, failOnHint, fileOutputOpts, filename, bailEnabled) {
   if (result.failureCount === 0) return;
+  if (result.failures && result.failures.length === 0) return;
   var err = new Error(result.output);
   delete err.stack;
   emitter(err);

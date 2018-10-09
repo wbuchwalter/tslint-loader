@@ -1,5 +1,15 @@
 # Changelog
 
+### 3.5.3
+
+Convert legacy rules for Tslint 5,
+fixes [#73](https://github.com/wbuchwalter/tslint-loader/issues/73)
+
+### 3.5.2
+
+Remove empty error for Tslint 5,
+fixes [#71](https://github.com/wbuchwalter/tslint-loader/issues/71)
+
 ### 3.5.1
 
 Enable Tslint versions greater than 4
