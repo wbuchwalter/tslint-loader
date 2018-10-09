@@ -56,7 +56,7 @@ function lint(webpackInstance, input, options) {
     fix: options.fix,
     formatter: options.formatter,
     formattersDirectory: options.formattersDirectory,
-    rulesDirectory: ''
+    rulesDirectory: options.rulesDirectory
   };
   var bailEnabled = (webpackInstance.options && webpackInstance.options.bail === true);
 
