@@ -22,7 +22,12 @@ function resolveFile(configPath) {
 }
 
 function requireLint(tslintPath) {
-  if (!Lint) Lint = require(typeof tslintPath === 'string' && tslintPath ? tslintPath : 'tslint');
+  if (!Lint) {
+    tslintPath =
+      typeof tslintPath === 'string' && tslintPath ? tslintPath : 'tslint';
+    process.env.UserTSLintPath = tslintPath;
+    Lint = require(tslintPath);
+  }
 }
 
 function resolveOptions(webpackInstance) {
