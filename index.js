@@ -146,9 +146,10 @@ module.exports = function(input, map) {
 
   var options = resolveOptions(webpackInstance);
 
-  if (!isHooked) {
+  if (!isHooked && options.typeCheck) {
+    var webpackCompiler = webpackInstance._compiler;
     updateCachedProgram(options.tsConfigFile);
-    webpackInstance._compiler && webpackInstance._compiler.hooks.watchRun.tap('tslint-loader', function() {
+    webpackCompiler && webpackCompiler.hooks && webpackCompiler.hooks.watchRun.tap('tslint-loader', function() {
       updateCachedProgram(options.tsConfigFile);
     });
     isHooked = true;
