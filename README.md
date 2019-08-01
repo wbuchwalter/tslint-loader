@@ -6,6 +6,9 @@
 
 Tslint loader for Webpack.
 
+:warning: __TSLint will be deprecated some time in 2019__. See this issue for more details: [Roadmap: TSLint &rarr; ESLint](https://github.com/palantir/tslint/issues/4534).   
+As such, users are also encouraged to migrate from tslint-loader to [eslint-loader ](https://github.com/webpack-contrib/eslint-loader)
+
 ## Installation
 
 ``` shell
