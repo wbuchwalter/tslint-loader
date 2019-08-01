@@ -14,6 +14,9 @@ var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
 var semver = require('semver');
 
+var cachedProgram;
+var isHooked = false;
+
 function resolveFile(configPath) {
   return path.isAbsolute(configPath)
     ? configPath
@@ -60,13 +63,9 @@ function lint(webpackInstance, input, options) {
   };
   var bailEnabled = (webpackInstance.options && webpackInstance.options.bail === true);
 
-  var program;
-  if (options.typeCheck) {
-    var tsconfigPath = resolveFile(options.tsConfigFile);
-    program = Lint.Linter.createProgram(tsconfigPath);
-  }
+  var tsProgram = options.typeCheck ? getCachedProgram() : undefined;
+  var linter = new Lint.Linter(lintOptions, tsProgram);
 
-  var linter = new Lint.Linter(lintOptions, program);
   linter.lint(webpackInstance.resourcePath, input, options.configuration);
   var result = linter.getResult();
   var emitter = options.emitErrors ? webpackInstance.emitError : webpackInstance.emitWarning;
@@ -128,16 +127,34 @@ function writeToFile(fileOutputOpts, result) {
   }
 }
 
+function updateCachedProgram(tsConfigFile) {
+  cachedProgram = Lint.Linter.createProgram(resolveFile(tsConfigFile));
+}
+
+function getCachedProgram() {
+  return cachedProgram;
+}
+
 module.exports = function(input, map) {
-  this.cacheable && this.cacheable();
-  var callback = this.async();
+  var webpackInstance = this;
+  webpackInstance.cacheable && webpackInstance.cacheable();
+  var callback = webpackInstance.async();
 
   if (!semver.satisfies(Lint.Linter.VERSION, '>=4.0.0')) {
     throw new Error('Tslint should be of version 4+');
   }
 
-  var options = resolveOptions(this);
-  lint(this, input, options);
+  var options = resolveOptions(webpackInstance);
+
+  if (!isHooked && options.typeCheck) {
+    var webpackCompiler = webpackInstance._compiler;
+    updateCachedProgram(options.tsConfigFile);
+    webpackCompiler && webpackCompiler.hooks && webpackCompiler.hooks.watchRun.tap('tslint-loader', function() {
+      updateCachedProgram(options.tsConfigFile);
+    });
+    isHooked = true;
+  }
+
+  lint(webpackInstance, input, options);
   callback(null, input, map);
 };
-
