@@ -102,6 +102,10 @@ module.exports = {
             quotemark: [true, 'double']
         }
     },
+
+    // can specify a custom tslint path with absolute path
+    // module "tslint" path
+    tslintPath: 'tslint'
     
     // can specify a custom config file relative to current directory or with absolute path
     // 'tslint-custom.json'

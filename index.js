@@ -5,7 +5,6 @@
 */
 'use strict';
 
-var Lint = require('tslint');
 var loaderUtils = require('loader-utils');
 var fs = require('fs');
 var path = require('path');
@@ -14,10 +13,21 @@ var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
 var semver = require('semver');
 
+var Lint;
+
 function resolveFile(configPath) {
   return path.isAbsolute(configPath)
     ? configPath
     : path.resolve(process.cwd(), configPath)
+}
+
+function requireLint(tslintPath) {
+  if (!Lint) {
+    tslintPath =
+      typeof tslintPath === 'string' && tslintPath ? tslintPath : 'tslint';
+    process.env.UserTSLintPath = tslintPath;
+    Lint = require(tslintPath);
+  }
 }
 
 function resolveOptions(webpackInstance) {
@@ -29,6 +39,8 @@ function resolveOptions(webpackInstance) {
   var configFile = options.configFile
     ? resolveFile(options.configFile)
     : null;
+  
+  requireLint(options.tslintPath);
 
   options.formatter = options.formatter || 'custom';
   options.formattersDirectory = options.formattersDirectory || __dirname + '/formatters/';
@@ -132,11 +144,12 @@ module.exports = function(input, map) {
   this.cacheable && this.cacheable();
   var callback = this.async();
 
+  var options = resolveOptions(this);
+
   if (!semver.satisfies(Lint.Linter.VERSION, '>=4.0.0')) {
     throw new Error('Tslint should be of version 4+');
   }
 
-  var options = resolveOptions(this);
   lint(this, input, options);
   callback(null, input, map);
 };
