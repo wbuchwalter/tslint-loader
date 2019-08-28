@@ -26,8 +26,8 @@ function resolveOptions(webpackInstance) {
 
   var options = objectAssign({}, tslintOptions, query);
 
-  var configFile = options.configFile
-    ? resolveFile(options.configFile)
+  var configFile = options.configFile || options.tsConfigFile
+    ? resolveFile(options.configFile || options.tsConfigFile)
     : null;
 
   options.formatter = options.formatter || 'custom';
