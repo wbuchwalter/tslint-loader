@@ -118,6 +118,7 @@ module.exports = {
     
     // enables type checked rules like 'for-in-array'
     // uses tsconfig.json from current working directory
+    // See the notes on when using this with Webpack watch runs
     typeCheck: false,
     
     // automatically fix linting errors
@@ -152,6 +153,33 @@ module.exports = {
         // A string to include at the bottom of every report file.
         // Useful for some report formats.
         footer: '</checkstyle>'
+    }
+}
+```
+
+### typeCheck and Webpack Watch mode
+Tslint will use a TypeScript program for typeChecked rules.  The TypeScript program will cache file sources
+when the program is created and therefore, the program needs to be recreated every watch run to pick
+up file changes.  This is accomplished using a Webpack plugin.  
+
+If you wish to use typeCheck in Webpack watch mode, you'll need to add the `TslintPlugin` to your Webpack config.
+
+```js
+var TslintPlugin = require('tslint-loader').TslintPlugin;
+
+module.exports = {
+    plugins: [
+        new TslintPlugin()
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                enforce: 'pre',
+                loader: 'tslint-loader',
+                options: { typeCheck: true, /* Loader options go here */ }
+            }
+        ]
     }
 }
 ```

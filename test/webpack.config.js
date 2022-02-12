@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var TslintPlugin = require('../index').TslintPlugin;
 
 module.exports = function() {
   return {
@@ -10,6 +11,9 @@ module.exports = function() {
     resolve: {
       extensions: ['.ts']
     },
+    plugins: [
+      new TslintPlugin()
+    ],
     module: {
       rules: [
         {

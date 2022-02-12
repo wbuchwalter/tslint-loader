@@ -13,6 +13,8 @@ var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 var objectAssign = require('object-assign');
 var semver = require('semver');
+var TslintPlugin = require('./lib/TslintPlugin');
+var programInstance = require('./lib/programInstance');
 
 function resolveFile(configPath) {
   return path.isAbsolute(configPath)
@@ -63,7 +65,7 @@ function lint(webpackInstance, input, options) {
   var program;
   if (options.typeCheck) {
     var tsconfigPath = resolveFile(options.tsConfigFile);
-    program = Lint.Linter.createProgram(tsconfigPath);
+    program = programInstance.getProgram(tsconfigPath);
   }
 
   var linter = new Lint.Linter(lintOptions, program);
@@ -140,4 +142,4 @@ module.exports = function(input, map) {
   lint(this, input, options);
   callback(null, input, map);
 };
-
+module.exports.TslintPlugin = TslintPlugin;
